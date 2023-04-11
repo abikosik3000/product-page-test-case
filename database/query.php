@@ -1,52 +1,79 @@
 <?php
 
 class Query{
+
+    protected $options; 
     public function __construct(public $body = '',public $vars = []){}
 
-    
-    protected function applyOption(Query &$query, array $options){
-
-        Model::applyWhereOption($query , $options);
-        Model::applyOrderOption($query , $options);
-        Model::applyLimitOption($query , $options);
-
-        unset($query);
+    public function result(){
+        /** @var PDO $pdo */
+        global $pdo;
+        $sth = $pdo->prepare($this->body);
+        //var_dump($this->body);
+        //var_dump($this->vars);
+        $sth->execute($this->vars);
+        return $sth->fetchAll();
     }
 
-    static protected function applyWhereOption(&$query , $options){
+    public function applyOption(array $options){
+
+        $this->applyWhereOption($options);
+        $this->applyOrderOption($options);
+        $this->applyLimitOption($options);
+    }
+
+    protected function applyWhereOption(array $options){
 
         //WHERE options
         if(isset($options['where'])){
-            $query .= " WHERE ";
-            foreach($options['where'] as $name => $cond){
+            $this->body .= " WHERE ";
+            foreach($options['where'] as $k => $cond){
+                
+                if(array_search($cond['sign'] , 
+                    ["=" , ">=" , "<" ,">" ,"<=" , "Like" ]) === false){
+                    continue;
+                }
 
-                $query .= "{$name} {$cond['sign']} {$cond['value']}";
-                if($name != array_key_last($options['where'])){
-                    $query .= ',';
+                $this->body .= "{$cond['field']} {$cond['sign']} ?";
+                $this->vars[] = $cond['value'];
+
+                if($k != array_key_last($options['where'])){
+                    $this->body .= ',';
                 }
             }
         }
     }
 
-    static protected function applyOrderOption(&$query , $options){
+    protected function applyOrderOption($options){
 
         //ORDER options
         if(isset($options['order_by'])){
-            $query .= " ORDER BY ";
+            $this->body .= " ORDER BY ";
             foreach($options['order_by'] as $name => $ord){
-                $query .= "$name $ord";
+
+                if(array_search($ord , ['asc' , "desc"]) === false){
+                    continue;
+                }
+                
+                $this->body .= "$name $ord";
+
                 if($name != array_key_last($options['order_by'])){
-                    $query .= ',';
+                    $this->body .= ',';
                 }
             }
         }
     }
 
-    static protected function applyLimitOption(&$query , $options){
+    protected function applyLimitOption($options){
 
-        //Limit options
+        //LIMIT options
         if(isset($options['limit'])){
-            $query .= " LIMIT {$options['limit']['from']} , {$options['limit']['count']}";
+            if(is_numeric($options['limit']['from']) && is_numeric($options['limit']['count'])){
+                $this->body .= " LIMIT {$options['limit']['from']} , {$options['limit']['count']}";
+                //$this->vars[] = ;
+                //$this->vars[] = (int)$options['limit']['count'];
+                
+            }
         }
     }
 }

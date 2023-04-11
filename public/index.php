@@ -15,15 +15,23 @@
         require_once "../models/categories.php";
         
         $options = [
-            'pagination' => [
-                'page' => 0,
-                'page_lenght' => 20, 
+            'limit' => [
+                'from' => 0,
+                'count' => 20
             ]
         ];
 
-        if(isset($_GET['category_id'])){
-            if(is_numeric($_GET['category_id']) ){
+        if(isset($_GET['filter_name'])){
+            
+            $options['where']['category_id']['field'] = 'title';
+            $options['where']['category_id']['sign'] = 'Like';
+            $options['where']['category_id']['value'] = "%".$_GET['filter_name']."%";
+        }
 
+        if(isset($_GET['category_id'])){
+            if(is_numeric($_GET['category_id'])){
+
+                $options['where']['category_id']['field'] = 'category_id';
                 $options['where']['category_id']['sign'] = '=';
                 $options['where']['category_id']['value'] = (int)$_GET['category_id'];
             }
@@ -32,14 +40,10 @@
         if(isset($_GET['order_by'])){
 
             $temp = explode(" ",$_GET['order_by']);
-            if( array_key_exists($temp[1] ,['ASC' , 'DESC'] )){
-
-                $options['order_by'][$temp[0]] = $temp[1];
-            }
+            $options['order_by'][$temp[0]] = $temp[1];
         }
 
-        if(!isset($_GET['page']) && !isset($_GET['page_count'])){
-            
+        if(isset($_GET['page']) &&  isset($_GET['page_count'])){
             if(is_numeric($_GET['page']) && is_numeric($_GET['page_count']) ){
 
                 $options['limit']['from'] = (int)$_GET['page']*(int)$_GET['page_count'];
@@ -47,17 +51,8 @@
             }
         }
 
-
-
-        
         var_dump($options);
-        /*$options = [
-                'order_by' => [
-                    'cost' => 'ASC',
-                ],
-                
-            ];*/
-
+        
         $products = Products::getData($options);
         $categories = Categories::getData();
         $pdo = null;
