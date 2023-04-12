@@ -1,0 +1,136 @@
+body{
+    background-color: #fff;
+    overflow-x: hidden;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.page-wrapper{
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 10px;
+    font-family: 'Roboto',
+     sans-serif ;
+}
+
+.flex{
+    display: flex;
+}
+
+.card{
+    overflow: hidden;
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px 0 rgb(0 0 0 / 15%);
+}
+
+.my-table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.my-table tr{
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    height: 53px;
+    text-align: left;
+    
+}
+
+.my-table tr:nth-child(2n + 1){
+    background-color: #f0f2ff;
+}
+
+.my-table th{
+    color: #fff;
+}
+
+.my-table td{
+    max-height: 30px;
+    margin: 0;
+    height: 53px;
+}
+
+.my-table tr:first-child{
+    background-color: #6c7ae0;
+}
+
+.column1{
+    width: 55%;
+    padding-left: 10px;
+}
+
+.column2{
+    width: 20%;
+    min-width: 60px;
+}
+
+.column3{
+    min-width: 15%;
+    min-width: 100px;
+    text-align: center;
+    padding-right: 10px;
+}
+
+.filter-card{
+    background-color: #6c7ae0;
+    color: #fff;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.filter-card form{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.input-box{
+    width: 50%;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    height: 50px;
+    padding-left: 10px;
+    padding-right: 10px;
+    min-width: 220px;
+    flex-grow: 1;
+}
+
+.input-box label{
+    min-width: 100%;
+    font-size: 15px;
+}
+
+.input-box input,select{
+    flex-grow: 1;
+    outline-color: #6c7ae0;
+    height: 25px;
+    border-radius: 5px;
+    outline-width: 1px;
+    outline-offset: 0px;
+    border: 1px solid #ced4da;
+    display: block;
+    box-sizing: border-box;
+    padding-left: 10px;
+}
+
+.page-card{
+
+}
+
+.input-box button{
+    height: 30px;
+    font-weight: 400;
+    font-size: 14px;
+    border-radius: 5px;
+    background-color: white;
+    border-width: 0px;
+    margin: 0px;
+    width: 100%;
+
+}

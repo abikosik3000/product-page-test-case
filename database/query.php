@@ -1,13 +1,14 @@
 <?php
 
 class Query{
+ 
+    public function __construct(private $body = '',private $allowed_fields = [] ,private $vars = []){}
 
-    protected $options; 
-    public function __construct(public $body = '',public $vars = []){}
-
-    public function result(){
+    public function result(array $options = []){
         /** @var PDO $pdo */
         global $pdo;
+
+        $this->applyOption($options);
         $sth = $pdo->prepare($this->body);
         //var_dump($this->body);
         //var_dump($this->vars);
@@ -15,14 +16,14 @@ class Query{
         return $sth->fetchAll();
     }
 
-    public function applyOption(array $options){
+    private function applyOption(array $options){
 
         $this->applyWhereOption($options);
         $this->applyOrderOption($options);
         $this->applyLimitOption($options);
     }
 
-    protected function applyWhereOption(array $options){
+    private function applyWhereOption(array $options){
 
         //WHERE options
         if(isset($options['where'])){
@@ -31,20 +32,24 @@ class Query{
                 
                 if(array_search($cond['sign'] , 
                     ["=" , ">=" , "<" ,">" ,"<=" , "Like" ]) === false){
-                    continue;
+                    throw new Error("Field Error");
                 }
 
-                $this->body .= "{$cond['field']} {$cond['sign']} ?";
+                if(array_search($cond['field'] , $this->allowed_fields) === false){
+                    throw new Error("Field Error");
+                }
+
+                $this->body .= " {$cond['field']} {$cond['sign']} ? ";
                 $this->vars[] = $cond['value'];
 
                 if($k != array_key_last($options['where'])){
-                    $this->body .= ',';
+                    $this->body .= 'AND';
                 }
             }
         }
     }
 
-    protected function applyOrderOption($options){
+    private function applyOrderOption($options){
 
         //ORDER options
         if(isset($options['order_by'])){
@@ -52,7 +57,11 @@ class Query{
             foreach($options['order_by'] as $name => $ord){
 
                 if(array_search($ord , ['asc' , "desc"]) === false){
-                    continue;
+                    throw new Error("Field Error");
+                }
+
+                if(array_search($name , $this->allowed_fields) === false){
+                    throw new Error("Field Error");
                 }
                 
                 $this->body .= "$name $ord";
@@ -64,15 +73,12 @@ class Query{
         }
     }
 
-    protected function applyLimitOption($options){
+    private function applyLimitOption($options){
 
         //LIMIT options
         if(isset($options['limit'])){
             if(is_numeric($options['limit']['from']) && is_numeric($options['limit']['count'])){
                 $this->body .= " LIMIT {$options['limit']['from']} , {$options['limit']['count']}";
-                //$this->vars[] = ;
-                //$this->vars[] = (int)$options['limit']['count'];
-                
             }
         }
     }
