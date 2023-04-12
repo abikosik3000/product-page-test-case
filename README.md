@@ -4,6 +4,10 @@
 Создайте веб-страницу на PHP, которая отображает список товаров
 и их цен, полученных из базы данных MySQL. С возможность сортировки и поиска по названию
 
+## code
+
+<a href="https://github.com/abikosik3000/product-page-test-case">https://github.com/abikosik3000/product-page-test-case</a>
+
 ## live demo
 <a href="https://o-bulochka.ru">https://o-bulochka.ru</a>
 
