@@ -8,12 +8,14 @@ class Query{
         /** @var PDO $pdo */
         global $pdo;
 
-        $this->applyOption($options);
-        $sth = $pdo->prepare($this->body);
-        //var_dump($this->body);
-        //var_dump($this->vars);
-        $sth->execute($this->vars);
-        return $sth->fetchAll();
+        try{
+            $this->applyOption($options);
+            $sth = $pdo->prepare($this->body);
+            $sth->execute($this->vars);
+            return $sth->fetchAll();
+        }catch(Exception $e){
+            return false;
+        }
     }
 
     private function applyOption(array $options){
@@ -32,11 +34,11 @@ class Query{
                 
                 if(array_search($cond['sign'] , 
                     ["=" , ">=" , "<" ,">" ,"<=" , "Like" ]) === false){
-                    throw new Error("Field Error");
+                    throw new Error("Insection Error");
                 }
 
                 if(array_search($cond['field'] , $this->allowed_fields) === false){
-                    throw new Error("Field Error");
+                    throw new Error("Insection Error");
                 }
 
                 $this->body .= " {$cond['field']} {$cond['sign']} ? ";
@@ -57,11 +59,11 @@ class Query{
             foreach($options['order_by'] as $name => $ord){
 
                 if(array_search($ord , ['asc' , "desc"]) === false){
-                    throw new Error("Field Error");
+                    throw new Error("Insection Error");
                 }
 
                 if(array_search($name , $this->allowed_fields) === false){
-                    throw new Error("Field Error");
+                    throw new Error("Insection Error");
                 }
                 
                 $this->body .= "$name $ord";

@@ -12,9 +12,13 @@
 
     <?php require_once "../controllers/products_page.php"; ?>
 
+    
+
     <div class="page-wrapper">
+        <h1 class="main-title"> Каталог </h1>
+
         <div class="flex card filter-card">
-            <form action="index.php" method="get">
+            <form id="filter_form" method="get">
 
                 <div class="input-box">
                     <label for="name">Поиск по названию</label>
@@ -62,9 +66,17 @@
                 </div>
                 
                 <div class="input-box page-card">
-                    Страница: <?php echo $page ?>
+                    Страница: <?php 
+                    if($page > 1){
+                        echo'<a href="#" id="prev_page" ><-</a>';
+                    }
+                    
+                    echo "<p>$page</p>"; 
+                    echo "<input type='hidden' id='page' name='page' value='$page' >";
+                    ?>
+                    <a href="#" id="next_page" >-></a>
                 </div>
-                
+
                 <div class="input-box page-card">
                     <button type="submit">Применить</button>
                 </div>

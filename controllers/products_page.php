@@ -6,7 +6,7 @@ require_once "../models/categories.php";
 $options = [
     'limit' => [
         'from' => 0,
-        'count' => 20
+        'count' => 10
     ],
     'sort_by' => [
         'title' => 'asc'
@@ -54,7 +54,7 @@ $sort_by = [
 ];
 
 $page = isset($_GET["page"]) ? $_GET["page"] : 1;
-$page_count = isset($_GET["page_count"]) ? $_GET["page_count"] : 20;
+$page_count = isset($_GET["page_count"]) ? $_GET["page_count"] : 10;
 $filter_name = isset($_GET["filter_name"]) ? $_GET["filter_name"] : '';
 
 $products = Products::getAllApplyFilters($options);
