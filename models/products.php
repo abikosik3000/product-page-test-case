@@ -3,13 +3,13 @@ require_once "model.php";
 
 class Products extends Model
 {
-    
+
     /**
      * return all produts from db satisfying the options
      * 
-     * @param array $options
+     * @param QueryFilters $options
      */
-    static public function getAllApplyFilters(array $options = [])
+    static public function getAllApplyFilters(QueryFilters $options)
     {
         $allowed_fields = array("title" , "id" , "amount" , "cost" , "category_id");
 

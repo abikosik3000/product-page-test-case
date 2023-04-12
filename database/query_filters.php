@@ -1,8 +1,10 @@
 <?php
 
+/**
+ * stores the conditions for the request
+ */
 class QueryFilters
 {
-
     public function __construct(public $where = [],public $order_by = [],public $limit = []){}
 
     public function setWhere($field , $sign ,$value)
@@ -12,6 +14,7 @@ class QueryFilters
             'sign' => $sign,
             'value' => $value,
         ];
+        return $this;
     }
 
     public function setOrderBy($field , $cond )
@@ -20,6 +23,7 @@ class QueryFilters
             'field' => $field,
             'cond' => $cond
         ];
+        return $this;
     }
 
     public function setLimit($from , $count )
@@ -30,5 +34,6 @@ class QueryFilters
                 'count' => $count
             ];
         }
+        return $this;
     }
 }

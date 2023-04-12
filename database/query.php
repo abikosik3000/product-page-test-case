@@ -8,7 +8,7 @@ class Query
     /**
      * construct
      * 
-     * @param string $body
+     * @param string $options
      * @param array $allowed_fields 
      * @param array $options
      */
@@ -17,9 +17,9 @@ class Query
     /**
      * executes the request with the provided options
      * 
-     * @param array $options
+     * @param QueryFilters $options
      */
-    public function result(array $options = [])
+    public function result(QueryFilters $options = new QueryFilters())
     {
         /** @var PDO $pdo */
         global $pdo;
@@ -37,14 +37,13 @@ class Query
     /**
      * constructs the request according to the options
      * 
-     * @param array $options
+     * @param QueryFilters $options
      */
-    private function applyOption(array $options)
+    private function applyOption(QueryFilters $options)
     {
-
-        $this->applyWhereOption($options);
-        $this->applyOrderOption($options);
-        $this->applyLimitOption($options);
+        $this->applyWhereOption($options->where);
+        $this->applyOrderOption($options->order_by);
+        $this->applyLimitOption($options->limit);
     }
 
     /**
@@ -54,23 +53,24 @@ class Query
      */
     private function applyWhereOption(array $options)
     {
-        if(isset($options['where'])){
+        if (count($options) > 0) {
             $this->body .= " WHERE ";
-            foreach($options['where'] as $k => $cond){
+
+            foreach ($options as $k => $cond) {
                 
-                if(array_search($cond['sign'] , 
-                    ["=" , ">=" , "<" ,">" ,"<=" , "Like" ]) === false){
+                if (array_search($cond['sign'] , 
+                    ["=" , ">=" , "<" ,">" ,"<=" , "Like" ]) === false) {
                     throw new Error("Insection Error");
                 }
 
-                if(array_search($cond['field'] , $this->allowed_fields) === false){
+                if (array_search($cond['field'] , $this->allowed_fields) === false) {
                     throw new Error("Insection Error");
                 }
 
                 $this->body .= " {$cond['field']} {$cond['sign']} ? ";
                 $this->vars[] = $cond['value'];
 
-                if($k != array_key_last($options['where'])){
+                if($k != array_key_last($options)){
                     $this->body .= 'AND';
                 }
             }
@@ -82,23 +82,23 @@ class Query
      * 
      * @param array $options
      */
-    private function applyOrderOption($options)
+    private function applyOrderOption(array $options)
     {
-        if(isset($options['order_by'])){
+        if (count($options) > 0) {
             $this->body .= " ORDER BY ";
-            foreach($options['order_by'] as $name => $ord){
+            foreach ($options as $k => $ord) {
 
-                if(array_search($ord , ['asc' , "desc"]) === false){
+                if (array_search($ord['cond'] , ['asc' , "desc"]) === false) {
                     throw new Error("Insection Error");
                 }
 
-                if(array_search($name , $this->allowed_fields) === false){
+                if (array_search($ord['field'] , $this->allowed_fields) === false) {
                     throw new Error("Insection Error");
                 }
                 
-                $this->body .= "$name $ord";
+                $this->body .= "{$ord['field']} {$ord['cond']}";
 
-                if($name != array_key_last($options['order_by'])){
+                if ($k != array_key_last($options)) {
                     $this->body .= ',';
                 }
             }
@@ -110,12 +110,10 @@ class Query
      * 
      * @param array $options
      */
-    private function applyLimitOption($options)
+    private function applyLimitOption(array $options)
     {
-        if(isset($options['limit'])){
-            if(is_numeric($options['limit']['from']) && is_numeric($options['limit']['count'])){
-                $this->body .= " LIMIT {$options['limit']['from']} , {$options['limit']['count']}";
-            }
+        if(count($options) > 0){
+            $this->body .= " LIMIT {$options['from']} , {$options['count']}";
         }
     }
 }
