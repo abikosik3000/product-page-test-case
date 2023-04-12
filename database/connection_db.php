@@ -1,5 +1,5 @@
 <?php
-$ini = parse_ini_file('../.ini');
+$ini = parse_ini_file('config.ini');
 $DBuser = $ini["db_user"];
 $DBpass = $ini["db_password"];
 $GLOBALS['pdo'] = null;

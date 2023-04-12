@@ -3,48 +3,17 @@ require_once '../connection_db.php';
 /** @var PDO $pdo */
 global $pdo;
 
-$pdo->query("DROP TABLE IF EXISTS products_to_categories ");
-$pdo->query("DROP TABLE IF EXISTS products");
-$pdo->query("DROP TABLE IF EXISTS categories");
-
 $pdo->query("
-CREATE TABLE products(
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    cost DECIMAL(10,2) NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    amount INT NULL DEFAULT NULL 
-)
-");
+INSERT INTO `products` (`id`, `cost`, `title`, `amount`) VALUES (NULL, '3500', 'Скейтборд', '11');
+INSERT INTO `products` (`id`, `cost`, `title`, `amount`) VALUES (NULL, '2500', 'Пенниборд', '12');
+INSERT INTO `products` (`id`, `cost`, `title`, `amount`) VALUES (NULL, '1500', 'Стикборд', '13');
 
-$pdo->query("
-CREATE TABLE categories(
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    category_name VARCHAR(255) NOT NULL
-)
-");
-
-$pdo->query("
-CREATE TABLE products_to_categories(
-    product_id INT NOT NULL,
-    category_id INT NOT NULL,
-    FOREIGN KEY (product_id)  REFERENCES products (id) ON DELETE CASCADE,
-    FOREIGN KEY (category_id)  REFERENCES categories (id) ON DELETE CASCADE
-)
-");
-
-$pdo = null;
-
-/*
-INSERT INTO `products` (`id`, `cost`, `title`, `amount`) VALUES (NULL, '3500', 'Скейтборд', '10');
-INSERT INTO `products` (`id`, `cost`, `title`, `amount`) VALUES (NULL, '2500', 'Пенниборд', '10');
-INSERT INTO `products` (`id`, `cost`, `title`, `amount`) VALUES (NULL, '1500', 'Стикборд', '10');
-
-INSERT INTO `products` (`id`, `cost`, `title`, `amount`) VALUES (NULL, '3500', 'Шлем', '10');
-INSERT INTO `products` (`id`, `cost`, `title`, `amount`) VALUES (NULL, '3500', 'Комплект защиты', '10');
+INSERT INTO `products` (`id`, `cost`, `title`, `amount`) VALUES (NULL, '3500', 'Шлем', '20');
+INSERT INTO `products` (`id`, `cost`, `title`, `amount`) VALUES (NULL, '3500', 'Комплект защиты', '13');
 
 INSERT INTO `products` (`id`, `cost`, `title`, `amount`) VALUES (NULL, '15000', 'Шоссейный велосипед', '10');
-INSERT INTO `products` (`id`, `cost`, `title`, `amount`) VALUES (NULL, '12500', 'Горный веловипед', '10');
-INSERT INTO `products` (`id`, `cost`, `title`, `amount`) VALUES (NULL, '5590', 'Детский велосипед', '10');
+INSERT INTO `products` (`id`, `cost`, `title`, `amount`) VALUES (NULL, '12500', 'Горный велоcипед', '4');
+INSERT INTO `products` (`id`, `cost`, `title`, `amount`) VALUES (NULL, '5590', 'Детский велосипед', '5');
 
 
 INSERT INTO `categories` (`id`, `category_name`) VALUES (NULL, 'Аксессуары');
@@ -70,4 +39,19 @@ INSERT INTO `products_to_categories` (`product_id`, `category_id`) VALUES ('8', 
 INSERT INTO `products_to_categories` (`product_id`, `category_id`) VALUES ('1', '4');
 INSERT INTO `products_to_categories` (`product_id`, `category_id`) VALUES ('2', '4');
 INSERT INTO `products_to_categories` (`product_id`, `category_id`) VALUES ('3', '4');
-*/
+");
+
+$pdo->query("
+INSERT INTO `products` (`id`, `cost`, `title`, `amount`) VALUES (NULL, '500', 'Гантеля', '98');
+INSERT INTO `products` (`id`, `cost`, `title`, `amount`) VALUES (NULL, '5500', 'Штанга', '56');
+INSERT INTO `products` (`id`, `cost`, `title`, `amount`) VALUES (NULL, '11000', 'Скамья для пресса', '5');
+INSERT INTO `products` (`id`, `cost`, `title`, `amount`) VALUES (NULL, '7000', 'Гиря', '20');
+
+INSERT INTO `categories` (`id`, `category_name`) VALUES (NULL, 'Фитнес');
+
+INSERT INTO `products_to_categories` (`product_id`, `category_id`) VALUES ('9', '5');
+INSERT INTO `products_to_categories` (`product_id`, `category_id`) VALUES ('10', '5');
+INSERT INTO `products_to_categories` (`product_id`, `category_id`) VALUES ('11', '5');
+INSERT INTO `products_to_categories` (`product_id`, `category_id`) VALUES ('12', '5');
+
+");
