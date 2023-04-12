@@ -1,20 +1,25 @@
 <?php
 require_once "model.php";
 
-class Products extends Model{
-
-    private const ALLOWED_FIELDS = array("title" , "id" , "amount" , "cost" , "category_id");
-
-    static public function getAllApplyFilters($options = []){
+class Products extends Model
+{
+    
+    /**
+     * return all produts from db satisfying the options
+     * 
+     * @param array $options
+     */
+    static public function getAllApplyFilters(array $options = [])
+    {
+        $allowed_fields = array("title" , "id" , "amount" , "cost" , "category_id");
 
         $query = new Query("SELECT DISTINCT title,cost,amount 
         FROM products 
         JOIN products_to_categories 
         ON products.id = products_to_categories.product_id"
-        ,Products::ALLOWED_FIELDS);
+        ,$allowed_fields);
         
         $res = $query->result($options);
-
         return $res;
     }
 }

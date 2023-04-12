@@ -1,10 +1,26 @@
 <?php
 
-class Query{
- 
+/**
+ * sql injection-protected query constructor
+ */
+class Query
+{
+    /**
+     * construct
+     * 
+     * @param string $body
+     * @param array $allowed_fields 
+     * @param array $options
+     */
     public function __construct(private $body = '',private $allowed_fields = [] ,private $vars = []){}
 
-    public function result(array $options = []){
+    /**
+     * executes the request with the provided options
+     * 
+     * @param array $options
+     */
+    public function result(array $options = [])
+    {
         /** @var PDO $pdo */
         global $pdo;
 
@@ -18,16 +34,26 @@ class Query{
         }
     }
 
-    private function applyOption(array $options){
+    /**
+     * constructs the request according to the options
+     * 
+     * @param array $options
+     */
+    private function applyOption(array $options)
+    {
 
         $this->applyWhereOption($options);
         $this->applyOrderOption($options);
         $this->applyLimitOption($options);
     }
 
-    private function applyWhereOption(array $options){
-
-        //WHERE options
+    /**
+     * construct WHERE part querry
+     * 
+     * @param array $options
+     */
+    private function applyWhereOption(array $options)
+    {
         if(isset($options['where'])){
             $this->body .= " WHERE ";
             foreach($options['where'] as $k => $cond){
@@ -51,9 +77,13 @@ class Query{
         }
     }
 
-    private function applyOrderOption($options){
-
-        //ORDER options
+    /**
+     * construct ORDER part querry
+     * 
+     * @param array $options
+     */
+    private function applyOrderOption($options)
+    {
         if(isset($options['order_by'])){
             $this->body .= " ORDER BY ";
             foreach($options['order_by'] as $name => $ord){
@@ -75,9 +105,13 @@ class Query{
         }
     }
 
-    private function applyLimitOption($options){
-
-        //LIMIT options
+    /**
+     * construct LIMIT part querry
+     * 
+     * @param array $options
+     */
+    private function applyLimitOption($options)
+    {
         if(isset($options['limit'])){
             if(is_numeric($options['limit']['from']) && is_numeric($options['limit']['count'])){
                 $this->body .= " LIMIT {$options['limit']['from']} , {$options['limit']['count']}";
